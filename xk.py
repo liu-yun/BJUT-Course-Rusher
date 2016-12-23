@@ -47,6 +47,9 @@ def retry_get(retry, session, h_url, **kwargs):
 
 def login(username, password):
     session = requests.Session()
+    session.headers.update({'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                            'Accept-Encoding': 'gzip, deflate, sdch',
+                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2957.0 Safari/537.36'})
     h_url = 'http://' + base_url + '/default_vsso.aspx'
     h_head = {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -133,7 +136,7 @@ def sel_course(session, course_name, course_number, viewstate, username, name):
         'dpkcmcGrid:txtPageSize': '200',
         'kcmcGrid:_ctl' + str(course_number + 1) + ':xk': 'on'
     }
-    r = retry_post(3, s, h_url, params=h_params, data=h_data, headers=h_head)
+    r = retry_post(3, session, h_url, params=h_params, data=h_data, headers=h_head)
     p = re.compile(r"<script language=\'javascript\'>alert\(\'.+?\'\);</script>")
     rp = p.findall(r.text)
     if len(rp):
@@ -147,14 +150,14 @@ if __name__ == '__main__':
     name = get_name(s, userinfo.usr)
     print(userinfo.usr, name)
     viewstate = get_viewstate(s, userinfo.usr, name)
-    todo_cousre = course.course
+    todo_course = course.course
     count = 0
     while 1:
         count += 1
         print('-------------Loop', count)
-        for cur_course in todo_cousre:
+        for cur_course in todo_course:
             print('Trying to get', cur_course[0], cur_course[1])
             result = sel_course(s, cur_course[0], cur_course[1], viewstate, userinfo.usr, name)
             print(result)
             if result == 'Successfully selected!':
-                todo_cousre.remove(cur_course)
+                todo_course.remove(cur_course)
