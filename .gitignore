@@ -1,9 +1,5 @@
 .idea/
 __pycache__/
-.Archive/
-rush2.py
 userinfo.py
-rush.py
 course.py
-fuck.py
 cache.py
