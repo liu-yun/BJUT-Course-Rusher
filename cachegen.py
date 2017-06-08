@@ -48,5 +48,5 @@ if __name__ == '__main__':
         for cur_course in todo_course:
             print('Trying to get viewstate', cur_course[0], cur_course[1])
             result = get_course_viewstate(s, cur_course[0], viewstate, userinfo.usr, name)
-            f.write('\'' + result + '\',\n')
-        f.write(']\n')
+            f.write(f'    \'{result}\',\n')
+        f.write('    ]\n')

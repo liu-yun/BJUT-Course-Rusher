@@ -10,8 +10,8 @@ def sel_course(session, course_name, course_number, viewstate, username, name):
     h_url = 'http://' + base_url + '/xf_xsqxxxk.aspx'
     h_params = {
         'xh': username,
-        'xm': name.encode('gb2312'),
-        'gnmkdm': 'N121113'
+        'xm': name.encode('gb18030'),
+        'gnmkdm': 'N121101'
     }
     h_head = {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -31,13 +31,17 @@ def sel_course(session, course_name, course_number, viewstate, username, name):
         'dpkcmcGrid:txtPageSize': '200',
         'kcmcGrid:_ctl' + str(course_number + 1) + ':xk': 'on'
     }
-    r = session.post(h_url, params=h_params, data=h_data, headers=h_head, timeout=2)
-    p = re.compile(r"<script language=\'javascript\'>alert\(\'.+?\'\);</script>")
-    rp = p.findall(r.text)
-    if len(rp):
-        return 'Failed, ' + rp[0][37:-12]
-    else:
-        return 'Successfully selected!'
+    try:
+        r = session.post(h_url, params=h_params, data=h_data, headers=h_head, timeout=2)
+        p = re.compile(r"<script language=\'javascript\'>alert\(\'.+?\'\);</script>")
+        rp = p.findall(r.text)
+        if len(rp):
+            return 'Failed, ' + rp[0][37:-12]
+        else:
+            return 'Successfully selected!'
+    except:
+        print('Error')
+    return 'Error'
 
 
 if __name__ == '__main__':
