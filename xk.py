@@ -149,10 +149,10 @@ if __name__ == '__main__':
     s = login(userinfo.usr, userinfo.pwd)
     name = get_name(s, userinfo.usr)
     try:
-      	print(userinfo.usr, name)
+    	print(userinfo.usr, name)
     except:
-      	# if name contains chars beyond gbk, just won't display
-     	print(userinfo.usr, name.encode('utf-8'))
+    	# if name contains chars beyond gbk, just won't display
+    	print(userinfo.usr, name.encode('utf-8'))
     sys.stdout.flush()
     viewstate = get_viewstate(s, userinfo.usr, name)
     todo_course = course.course
