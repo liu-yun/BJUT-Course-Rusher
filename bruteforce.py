@@ -3,7 +3,7 @@ import re
 import course
 import userinfo
 import cache
-from xk import login, get_name, base_url
+from xk import login, get_name, base_url, retry_post
 
 
 def sel_course(session, course_name, course_number, viewstate, username, name):
@@ -31,17 +31,13 @@ def sel_course(session, course_name, course_number, viewstate, username, name):
         'dpkcmcGrid:txtPageSize': '200',
         'kcmcGrid:_ctl' + str(course_number + 1) + ':xk': 'on'
     }
-    try:
-        r = session.post(h_url, params=h_params, data=h_data, headers=h_head, timeout=2)
-        p = re.compile(r"<script language=\'javascript\'>alert\(\'.+?\'\);</script>")
-        rp = p.findall(r.text)
-        if len(rp):
-            return 'Failed, ' + rp[0][37:-12]
-        else:
-            return 'Successfully selected!'
-    except:
-        print('Error')
-    return 'Error'
+    r = retry_post(3, session, h_url, params=h_params, data=h_data, headers=h_head, timeout=2)
+    p = re.compile(r"<script language=\'javascript\'>alert\(\'.+?\'\);</script>")
+    rp = p.findall(r.text)
+    if len(rp):
+        return 'Failed, ' + rp[0][37:-12]
+    else:
+        return 'Successfully selected!'
 
 
 if __name__ == '__main__':

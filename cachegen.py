@@ -2,7 +2,7 @@ import re
 
 import userinfo
 import course
-from xk import base_url, login, get_name, get_viewstate
+from xk import base_url, login, get_name, get_viewstate, retry_post
 
 
 def get_course_viewstate(session, course_name, viewstate, username, name):
@@ -30,7 +30,7 @@ def get_course_viewstate(session, course_name, viewstate, username, name):
         'dpkcmcGrid:txtChoosePage': '1',
         'dpkcmcGrid:txtPageSize': '200',
     }
-    r = session.post(h_url, params=h_params, data=h_data, headers=h_head, timeout=2)
+    r = retry_post(3, session, h_url, params=h_params, data=h_data, headers=h_head, timeout=2)
     p = re.compile(r'<input type=\"hidden\" name=\"__VIEWSTATE\" value=\".+?\" />')
     rp = p.findall(r.text)
     view = rp[0][47:-4]
