@@ -32,6 +32,15 @@ def sel_course(session, course_name, course_number, viewstate, username, name):
         'kcmcGrid:_ctl' + str(course_number + 1) + ':xk': 'on'
     }
     r = retry_post(3, session, h_url, params=h_params, data=h_data, headers=h_head, timeout=2)
+
+    p = re.compile(r"<legend>已选课程.+?退选<\/td>(.+?)<\/tbody>")
+    rp = p.findall(r.text.replace('\n', '').replace('\t', ''))
+    p = re.compile(r"<td>(.+?)<\/td>.+?<\/tr>")
+    try:
+        print(p.findall(rp[0]))
+    except:
+        print('Unknown')
+
     p = re.compile(r"<script language=\'javascript\'>alert\(\'.+?\'\);</script>")
     rp = p.findall(r.text)
     if len(rp):
